@@ -1,0 +1,92 @@
+<div class="pgWrapper" style="height: 100vh; width: 100%;">
+	<div class="row" style="height: 100%; margin-top: 50px;">
+		
+		<!-- Beginning of Notification Center Posting -->
+		<div class="col-xs-12 col-md-4" style="height: 90%; border-radius: 10px; text-align: center;" ng-controller="dashboardCtrl">
+			<h1>Notification Center</h1>
+			<div style="width: 90%; height: 85%; padding-top: 3%; border: 1px solid black; margin: 0px auto; overflow-y: auto; border-radius: 10px;">
+				
+				<textarea type="text" class="form-control" ng-model="postDescription" placeholder="Add post (200 Character Max)" required maxlength="200" style="height: 25%; width: 90%; margin: 3% auto; resize: none;"></textarea>
+				
+				<button ng-click="addItem()" ng-disabled="!postDescription" class="btn btn-primary" type="button">Post</button>
+				
+				<!-- Beginning of the Card -->
+				<div class="card text-xs-center" ng-repeat="item in todos | orderBy:'-id'">
+					
+					<a ui-sref="#" data-toggle="modal" data-target="#postModal" style="text-decoration: none; color: #000; cursor: pointer;">
+						<div class="card-block">
+							<p class="card-text" style="padding-left: 5px; padding-right: 5px; padding-top: 5px;">{{item.description}}</p>
+						<!--<small  class="text-warning"> [ {{item.id}} ]</small>-->
+						</div>
+					</a>
+					
+					<!-- Line break between notifications -->
+					<hr style="width: 50%; color: #aaa;">
+					<!-- End of line break -->
+					
+				</div>
+				<!-- End of the Card -->
+				
+			</div>
+		</div>
+		<!-- End of Notification Center Posting -->
+		
+		
+		<!-- Beginning of Register User -->
+		<div class="col-xs-12 col-md-4" style="height: 90%; border-radius: 10px; text-align: center;" ng-controller="LoginCtrl">
+			<h1>Register User</h1>
+			<div style="width: 90%; height: 85%; border: 1px solid black; margin: 0px auto; overflow-y: auto; border-radius: 10px;">
+				<!-- Username and Password input fields -->
+				<div class="form-group" style="width: 80%; margin: 0px auto 10px;">
+					<label for="usr">Email:</label>
+					<input  type="text" class="form-control" id="email" placeholder="Email" ng-model="username" />
+				</div>
+				<div class="form-group" style="width: 80%; margin: 0px auto 10px;">
+					<label for="pwd">Password:</label>
+					<input type="password" class="form-control" id="password" placeholder="Password" ng-model="password" />
+				</div>
+				
+				<!-- Login Button
+				<div style="text-align: center;">
+					<button type="button" class="btn btn-primary" style="margin: 0px auto;" ng-click="login(username, password)"> 
+						Login 
+					</button>
+				</div>-->
+				
+				<!-- Sign Up Button -->
+				<button type="button" class="btn btn-danger" ng-click="register(username, password)"> 
+					Sign Up 
+				</button>
+			</div>
+		</div>
+		<!-- End of Register User -->
+		
+		
+		<!-- Beginning of UV Community Posting -->
+		<div class="col-xs-12 col-md-4" style="height: 90%; border-radius: 10px; text-align: center;">
+			<h1>UV Community Center</h1>
+			<div style="width: 90%; height: 85%; border: 1px solid black; margin: 0px auto; overflow-y: auto; border-radius: 10px;">
+				
+			</div>
+		</div>
+		<!-- End of UV Community Posting -->
+		
+		
+		<!-- Beginning of Nearby Posting -->
+		<div class="col-xs-12 col-md-4" style="height: 90%; border-radius: 10px; text-align: center;" ng-controller="nearbyCtrl">
+			<h1>Nearby Center</h1>
+			<div style="width: 90%; height: 85%; border: 1px solid black; margin: 0px auto; overflow-y: auto; border-radius: 10px;">
+				
+				<input type="text" class="form-control" ng-model="postHeader" placeholder="Add header (25 Character Max)" required maxlength="25" style="width: 90%; margin: 3% auto;" />
+				<textarea type="text" class="form-control" ng-model="postDescription" placeholder="Add post (175 Character Max)" required maxlength="175" style="height: 25%; width: 90%; margin: 3% auto; resize: none;"></textarea>
+				<input type="file" ng-model="postImage" id="postImage">
+				
+				<button ng-click="addItem()" ng-disabled="!postDescription" class="btn btn-primary" type="button">Post</button>
+
+			</div>
+			
+		</div>
+		<!-- End of Nearby Posting -->
+		
+	</div>
+</div>
