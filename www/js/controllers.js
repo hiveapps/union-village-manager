@@ -162,28 +162,14 @@ var ref = new Firebase("https://temporaryuv.firebaseio.com/");
 
 
 
-/* Nearby Controller */
-unionVillage.controller("nearbyCtrl", function($scope, $firebaseArray, $timeout) {
+/* My Neighbors Controllers */
+unionVillage.controller("restaurantsCtrl", function($scope, $firebaseArray, $timeout) {
 
 var ref = new Firebase("https://temporaryuv.firebaseio.com/");
-
-    // Get Stored Posts
-    var ratesRef = new Firebase('https://temporaryuv.firebaseio.com/nearby');
-  
-    ratesRef.on("value", function (snapshot) {
-      $timeout(function () {
-        update(snapshot);
-        console.log(snapshot);
-      });
-    });
-    
-    function update (snapshot) {
-      $scope.todos = $firebaseArray(ratesRef);
-    };
     
     
     //Submit posts
-    var postsRef = ref.child("nearby")
+    var postsRef = ref.child("restaurants")
     $scope.addItem = function(){
       
         // Create a unique ID
@@ -193,27 +179,63 @@ var ref = new Firebase("https://temporaryuv.firebaseio.com/");
           id: timestamp,
           header: $scope.postHeader,
           description: $scope.postDescription,
-          image: $scope.postImage,
           liked: false
         });
         
         $scope.postHeader = "";
         $scope.postDescription = "";
-        $scope.postImage = "";
     };
     
-    // Update the "like" status to 'liked'
-    $scope.changeStatus   = function (item) {
+});
 
-        // Get the Firebase reference of the item
-        var itemRef = new  Firebase(ref + item.id);
 
-        // Firebase : Update the item
-        itemRef.update({
-            id: item.id,
-            description : item.description,
+unionVillage.controller("gamblingCtrl", function($scope, $firebaseArray, $timeout) {
+
+var ref = new Firebase("https://temporaryuv.firebaseio.com/");
+    
+    
+    //Submit posts
+    var postsRef = ref.child("gambling")
+    $scope.addItem = function(){
+      
+        // Create a unique ID
+        var timestamp = new Date().valueOf()
+  
+        postsRef.push({
+          id: timestamp,
+          header: $scope.postHeader,
+          description: $scope.postDescription,
+          liked: false
         });
+        
+        $scope.postHeader = "";
+        $scope.postDescription = "";
+    };
+    
+});
 
+
+unionVillage.controller("sightsCtrl", function($scope, $firebaseArray, $timeout) {
+
+var ref = new Firebase("https://temporaryuv.firebaseio.com/");
+    
+    
+    //Submit posts
+    var postsRef = ref.child("sights")
+    $scope.addItem = function(){
+      
+        // Create a unique ID
+        var timestamp = new Date().valueOf()
+  
+        postsRef.push({
+          id: timestamp,
+          header: $scope.postHeader,
+          description: $scope.postDescription,
+          liked: false
+        });
+        
+        $scope.postHeader = "";
+        $scope.postDescription = "";
     };
     
 });

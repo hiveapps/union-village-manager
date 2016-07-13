@@ -31,30 +31,6 @@ unionVillage.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl: 'templates/dashboard.html'
             }
         }
-    })
-    .state("unionVillage.medicalPortal", {
-        url: "/medicalPortal",
-        views: {
-            'content@': {
-                templateUrl: 'templates/medicalPortal.html'
-            }
-        }
-    })
-    .state("unionVillage.community", {
-        url: "/community",
-        views: {
-            'content@': {
-                templateUrl: 'templates/community.html'
-            }
-        }
-    })
-    .state("unionVillage.nearby", {
-        url: "/nearby",
-        views: {
-            'content@': {
-                templateUrl: 'templates/nearby.html'
-            }
-        }
     });
 
     

@@ -38,11 +38,11 @@
 			<div style="width: 90%; height: 85%; border: 1px solid black; margin: 0px auto; overflow-y: auto; border-radius: 10px;">
 				<!-- Username and Password input fields -->
 				<div class="form-group" style="width: 80%; margin: 0px auto 10px;">
-					<label for="usr">Email:</label>
+					<label for="email">Email:</label>
 					<input  type="text" class="form-control" id="email" placeholder="Email" ng-model="username" />
 				</div>
 				<div class="form-group" style="width: 80%; margin: 0px auto 10px;">
-					<label for="pwd">Password:</label>
+					<label for="password">Password:</label>
 					<input type="password" class="form-control" id="password" placeholder="Password" ng-model="password" />
 				</div>
 				
@@ -72,9 +72,9 @@
 		<!-- End of UV Community Posting -->
 		
 		
-		<!-- Beginning of Nearby Posting -->
-		<div class="col-xs-12 col-md-4" style="height: 90%; border-radius: 10px; text-align: center;" ng-controller="nearbyCtrl">
-			<h1>Nearby Center</h1>
+		<!-- Beginning of Neighbors Posting -->
+		<div class="col-xs-12 col-md-4" style="height: 90%; border-radius: 10px; text-align: center;" ng-controller="restaurantsCtrl">
+			<h1>Restaurants</h1>
 			<div style="width: 90%; height: 85%; border: 1px solid black; margin: 0px auto; overflow-y: auto; border-radius: 10px;">
 				
 				<input type="text" class="form-control" ng-model="postHeader" placeholder="Add header (25 Character Max)" required maxlength="25" style="width: 90%; margin: 3% auto;" />
@@ -86,7 +86,37 @@
 			</div>
 			
 		</div>
-		<!-- End of Nearby Posting -->
+		
+		
+		<div class="col-xs-12 col-md-4" style="height: 90%; border-radius: 10px; text-align: center;" ng-controller="gamblingCtrl">
+			<h1>Gambling</h1>
+			<div style="width: 90%; height: 85%; border: 1px solid black; margin: 0px auto; overflow-y: auto; border-radius: 10px;">
+				
+				<input type="text" class="form-control" ng-model="postHeader" placeholder="Add header (25 Character Max)" required maxlength="25" style="width: 90%; margin: 3% auto;" />
+				<textarea type="text" class="form-control" ng-model="postDescription" placeholder="Add post (175 Character Max)" required maxlength="175" style="height: 25%; width: 90%; margin: 3% auto; resize: none;"></textarea>
+				<input type="file" ng-model="postImage" id="postImage">
+				
+				<button ng-click="addItem()" ng-disabled="!postDescription" class="btn btn-primary" type="button">Post</button>
+
+			</div>
+			
+		</div>
+		
+		
+		<div class="col-xs-12 col-md-4" style="height: 90%; border-radius: 10px; text-align: center;" ng-controller="sightsCtrl">
+			<h1>Sights</h1>
+			<div style="width: 90%; height: 85%; border: 1px solid black; margin: 0px auto; overflow-y: auto; border-radius: 10px;">
+				
+				<input type="text" class="form-control" ng-model="postHeader" placeholder="Add header (25 Character Max)" required maxlength="25" style="width: 90%; margin: 3% auto;" />
+				<textarea type="text" class="form-control" ng-model="postDescription" placeholder="Add post (175 Character Max)" required maxlength="175" style="height: 25%; width: 90%; margin: 3% auto; resize: none;"></textarea>
+				<input type="file" ng-model="postImage" id="postImage">
+				
+				<button ng-click="addItem()" ng-disabled="!postDescription" class="btn btn-primary" type="button">Post</button>
+
+			</div>
+			
+		</div>
+		<!-- End of Neighbors Posting -->
 		
 	</div>
 </div>
