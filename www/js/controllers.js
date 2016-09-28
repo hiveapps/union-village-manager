@@ -1,5 +1,21 @@
 var unionVillage = angular.module('unionVillage.controllers', []);
 
+/* !!!FIREBASE 3.0!!! Initialize Firebase */
+// Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDEQLgoUIz4JcggXiURBVPylAq0pJYrgi0",
+    authDomain: "temporaryuv.firebaseapp.com",
+    databaseURL: "https://temporaryuv.firebaseio.com",
+    storageBucket: "temporaryuv.appspot.com",
+    messagingSenderId: "1020616732436"
+  };
+  firebase.initializeApp(config);
+  
+  // Get a reference to the storage service, which is used to create references in your storage bucket
+  var storage = firebase.storage();
+  
+  // Create a storage reference from our storage service
+  var storageRef = storage.ref();
 
 unionVillage.controller("headerCtrl", function($scope, $location) {
   $scope.isActive = function (viewLocation) { 
@@ -10,24 +26,22 @@ unionVillage.controller("headerCtrl", function($scope, $location) {
   });
 });
 
-// !!!FIREBASE 2.0!!! NEED TO UPDATE TO 3.0 ONCE ANGULAR FIRE IS UPDATED 
 //Totally functioning simple login
-unionVillage.controller("LoginCtrl", function($scope, $firebaseAuth, $state){
-var users = new Firebase("https://temporaryuv.firebaseio.com/");
+unionVillage.controller("LoginCtrl", function($scope, $state){
   
   //This is going to get and log the user status, this could be copied and/or used for the beginning framework to build
   //a functioning profile page
-  var status = new Firebase("https://temporaryuv.firebaseio.com/");
-  var authData = status.getAuth();
-  
-  if (authData) {
-    console.log("User " + authData.uid + " is logged in with " + authData.provider);
+  var user = firebase.auth().currentUser;
+
+  if (user) {
+    console.log("User is logged in");
     $state.go('unionVillage.dashboard');
   } else {
     console.log("User is logged out");
     $state.go('unionVillage.home');
-  }
+  };
   
+  // THIS DOESN'T WORK, NEED TO FIX FOR FIREBASE 3.X.X
   //This is called when a user clicks the 'Sign Up' button
   $scope.register = function(username, password){
     users.createUser({
@@ -52,225 +66,6 @@ var users = new Firebase("https://temporaryuv.firebaseio.com/");
         $state.go('unionVillage.dashboard');
       }
     });
-  };
-  
-  //This is called when a user clicks the 'Login' button
-  $scope.login = function(username, password){
-    users.authWithPassword({
-      email    : username,
-      password : password
-    }, function(error) {
-      if (error) {
-        console.log("Login Failed!", error);
-      } else {
-        $state.go('unionVillage.dashboard');
-      }
-    });
-  };
-  
-  
-  // we would probably save a profile when we register new users on our app
-  // we could also read the profile to see if it's null
-  // here we will just simulate this with an isNewUser boolean
-  var isNewUser = true;
-  
-  var ref = new Firebase("https://temporaryuv.firebaseio.com/");
-  ref.onAuth(function(authData) {
-    if (authData && isNewUser) {
-      // save the user's profile into the database so we can list users,
-      // use them in Security and Firebase Rules, and show profiles
-      ref.child("users").child(authData.uid).set({
-        provider: authData.provider,
-        email: getName(authData)
-      });
-    }
-  });
-  
-  // find a suitable name based on the meta info given by each provider
-  function getName(authData) {
-    switch(authData.provider) {
-      case 'password':
-        return authData.password.email.replace(/@.*/, '');
-      case 'twitter':
-        return authData.twitter.displayName;
-      case 'facebook':
-        return authData.facebook.displayName;
-    }
-  }
-  
-  //Logout Functionality
-  $scope.logout = function() {
-    users.unauth();
-    $state.go('unionVillage.home');
-  };
-  
-});
-
-
-
-/*Notification Center Controller */
-unionVillage.controller("dashboardCtrl", function($scope, $firebaseArray, $timeout) {
-
-var ref = new Firebase("https://temporaryuv.firebaseio.com/");
-
-    // Get Stored Posts
-    var ratesRef = new Firebase('https://temporaryuv.firebaseio.com/notificationCenter');
-  
-    ratesRef.on("value", function (snapshot) {
-      $timeout(function () {
-        update(snapshot);
-        console.log(snapshot);
-      });
-    });
-    
-    function update (snapshot) {
-      $scope.todos = $firebaseArray(ratesRef);
-    };
-    
-    
-    //Submit posts
-    var postsRef = ref.child("notificationCenter")
-    $scope.addItem = function(){
-      
-        // Create a unique ID
-        var timestamp = new Date().valueOf()
-  
-        postsRef.push({
-          id: timestamp,
-          description: $scope.postDescription,
-          liked: false
-        });
-        
-        $scope.postDescription = "";
-    };
-    
-    // Update the "like" status to 'liked'
-    $scope.changeStatus   = function (item) {
-
-        // Get the Firebase reference of the item
-        var itemRef = new  Firebase(ref + item.id);
-
-        // Firebase : Update the item
-        itemRef.update({
-            id: item.id,
-            description : item.description,
-        });
-
-    };
-    
-});
-
-
-
-/* My Neighbors Controllers */
-unionVillage.controller("restaurantsCtrl", function($scope, $firebaseArray, $timeout) {
-
-var ref = new Firebase("https://temporaryuv.firebaseio.com/");
-    
-    
-    //Submit posts
-    var postsRef = ref.child("restaurants")
-    $scope.addItem = function(){
-      
-        // Create a unique ID
-        var timestamp = new Date().valueOf()
-  
-        postsRef.push({
-          id: timestamp,
-          header: $scope.postHeader,
-          description: $scope.postDescription,
-          liked: false
-        });
-        
-        $scope.postHeader = "";
-        $scope.postDescription = "";
-    };
-    
-});
-
-
-unionVillage.controller("gamblingCtrl", function($scope, $firebaseArray, $timeout) {
-
-var ref = new Firebase("https://temporaryuv.firebaseio.com/");
-    
-    
-    //Submit posts
-    var postsRef = ref.child("gambling")
-    $scope.addItem = function(){
-      
-        // Create a unique ID
-        var timestamp = new Date().valueOf()
-  
-        postsRef.push({
-          id: timestamp,
-          header: $scope.postHeader,
-          description: $scope.postDescription,
-          liked: false
-        });
-        
-        $scope.postHeader = "";
-        $scope.postDescription = "";
-    };
-    
-});
-
-
-unionVillage.controller("sightsCtrl", function($scope, $firebaseArray, $timeout) {
-
-var ref = new Firebase("https://temporaryuv.firebaseio.com/");
-    
-    
-    //Submit posts
-    var postsRef = ref.child("sights")
-    $scope.addItem = function(){
-      
-        // Create a unique ID
-        var timestamp = new Date().valueOf()
-  
-        postsRef.push({
-          id: timestamp,
-          header: $scope.postHeader,
-          description: $scope.postDescription,
-          liked: false
-        });
-        
-        $scope.postHeader = "";
-        $scope.postDescription = "";
-    };
-    
-});
-
-/* !!!FIREBASE 3.0!!! Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyAPonQNzJOgFx-Qg1QT0nuBck3XUch-WAU",
-    authDomain: "unionvillage.firebaseapp.com",
-    databaseURL: "https://unionvillage.firebaseio.com",
-    storageBucket: "project-8228738253020726929.appspot.com",
-  };
-  firebase.initializeApp(config);
-
-unionVillage.controller("headerCtrl", function($scope, $location) {
-  $scope.isActive = function (viewLocation) { 
-        return viewLocation === $location.path();
-    };
-  $('.navbar-collapse a:not(.dropdown-toggle)').click(function(){
-    $(".navbar-collapse").collapse('hide');
-  });
-});
-
-//Totally functioning simple login
-unionVillage.controller("LoginCtrl", function($scope, $state){
-  
-  //This is going to get and log the user status, this could be copied and/or used for the beginning framework to build
-  //a functioning profile page
-  var user = firebase.auth().currentUser;
-
-  if (user) {
-    console.log("User is logged in");
-    $state.go('unionVillage.dashboard');
-  } else {
-    console.log("User is logged out");
-    $state.go('unionVillage.home');
   };
   
   $scope.login = function(email, password){
@@ -305,7 +100,32 @@ unionVillage.controller("LoginCtrl", function($scope, $state){
     };
   };
   
-  /*Logout Functionality
+  /* THIS DOESN'T WORK, NEED TO FIX FOR FIREBASE 3.X.X *
+  ref.onAuth(function(authData) {
+    if (authData && isNewUser) {
+      // save the user's profile into the database so we can list users,
+      // use them in Security and Firebase Rules, and show profiles
+      ref.child("users").child(authData.uid).set({
+        provider: authData.provider,
+        email: getName(authData)
+      });
+    }
+  });*
+  
+  // THIS DOESN'T WORK, NEED TO FIX FOR FIREBASE 3.X.X
+  // find a suitable name based on the meta info given by each provider
+  function getName(authData) {
+    switch(authData.provider) {
+      case 'password':
+        return authData.password.email.replace(/@.*, ''); //add in "/" after "*" when uncommented
+      case 'twitter':
+        return authData.twitter.displayName;
+      case 'facebook':
+        return authData.facebook.displayName;
+    }
+  }
+  
+  /*Logout Functionality */
   $scope.logout = function() {
     firebase.auth().signOut().then(function() {
       // Sign-out successful.
@@ -319,26 +139,11 @@ unionVillage.controller("LoginCtrl", function($scope, $state){
 
 
 
-/*Thread Page Controller
-unionVillage.controller("threadCtrl", function($scope, $firebaseArray, $timeout) {
+/*Thread Page Controller */
+unionVillage.controller("dashboardCtrl", function($scope, $firebaseArray, $timeout) {
 
-    
-    /*var ratesRef = firebase.database().ref('posts');
-    ratesRef.on('value', function(snapshot) {
-      //$scope.todos = snapshot.val().todos;
-      $timeout(function () {
-        update(snapshot);
-        console.log(snapshot);
-      });
-    });
-    function update (snapshot) {
-      //$scope.todos = $firebaseArray(ratesRef);
-      //$scope.todos = firebase.database().ratesRef;
-      $scope.todos = snapshot.val().todos;
-    };*/
-
-    /* Get Stored Posts
-    var ratesRef = firebase.database().ref('posts');
+    /* Get Stored Posts */
+    var ratesRef = firebase.database().ref('notificationCenter');
   
     ratesRef.on("value", function (snapshot) {
       $timeout(function () {
@@ -352,11 +157,11 @@ unionVillage.controller("threadCtrl", function($scope, $firebaseArray, $timeout)
       //$scope.todos = firebase.database().ratesRef;
     };
     
-    /* Add posts
+    /* Add posts */
     $scope.addItem = function writeUserData(userId, name, email) {
       var timestamp = new Date().valueOf()
       
-      firebase.database().ref('posts').push({
+      firebase.database().ref('notificationCenter').push({
         id: timestamp,
         description: $scope.postDescription,
         liked: false
@@ -365,4 +170,90 @@ unionVillage.controller("threadCtrl", function($scope, $firebaseArray, $timeout)
       $scope.postDescription = "";
     };
     
-});*/
+});
+
+
+/* My Neighbors Controllers */
+unionVillage.controller("restaurantsCtrl", function($scope, $firebaseArray, $timeout) {
+    var selected_file = $('#input').get(0).files[0];
+    var nBytes = 0;
+    
+    /* Add posts */
+    $scope.addItem = function writeUserData(userId, name, email) {
+      var timestamp = new Date().valueOf()
+      
+      firebase.database().ref('restaurants').push({
+        id: timestamp,
+        header: $scope.postHeader,
+        description: $scope.postDescription,
+        liked: false
+      });
+      
+      $scope.postHeader = "";
+      $scope.postDescription = "";
+
+    };
+
+    // Create a root reference
+    var storageRef = firebase.storage().ref();
+
+    // Create a reference to 'mountains.jpg'
+    var mountainsRef = storageRef.child('mountains.jpg');
+
+    // Create a reference to 'images/mountains.jpg'
+    var mountainImagesRef = storageRef.child('images/mountains.jpg');
+
+    // While the file names are the same, the references point to different files
+    mountainsRef.name === mountainImagesRef.name            // true
+    mountainsRef.fullPath === mountainImagesRef.fullPath    // false
+    
+});
+
+
+unionVillage.controller("gamblingCtrl", function($scope, $firebaseArray, $timeout) {
+
+    /* Add posts */
+    $scope.addItem = function writeUserData(userId, name, email) {
+      var timestamp = new Date().valueOf()
+      
+      firebase.database().ref('gambling').push({
+        id: timestamp,
+        header: $scope.postHeader,
+        description: $scope.postDescription,
+        liked: false
+      });
+      
+      $scope.postHeader = "";
+      $scope.postDescription = "";
+    
+    };
+    
+});
+
+
+unionVillage.controller("sightsCtrl", function($scope, $firebaseArray, $timeout) {
+
+    /* Add posts */
+    $scope.addItem = function writeUserData(userId, name, email) {
+      var timestamp = new Date().valueOf()
+      
+      firebase.database().ref('sights').push({
+        id: timestamp,
+        header: $scope.postHeader,
+        description: $scope.postDescription,
+        liked: false
+      });
+      
+      $scope.postHeader = "";
+      $scope.postDescription = "";
+    
+    };
+    
+});
+
+
+unionVillage.controller("imgCtrl", function($scope, $firebaseArray, $timeout) {
+
+    
+    
+});

@@ -142,6 +142,10 @@ nav.navbar div ul ul.dropdown-menu li a {
 /* End of Leasing Info Styling */
 
 
+input[type=file] {
+    margin: 0 auto;
+}
+
 
 /* Footer Styling for Entire Site */
 .navbar#foot01 {
