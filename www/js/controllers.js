@@ -28,7 +28,7 @@ unionVillage.controller("headerCtrl", function($scope, $location) {
 
 //Totally functioning simple login
 unionVillage.controller("LoginCtrl", function($scope, $state){
-  
+
   //This is going to get and log the user status, this could be copied and/or used for the beginning framework to build
   //a functioning profile page
   var user = firebase.auth().currentUser;
@@ -36,39 +36,47 @@ unionVillage.controller("LoginCtrl", function($scope, $state){
   if (user) {
     console.log("User is logged in");
     $state.go('unionVillage.dashboard');
+    document.getElementById('displayName').textContent = user.displayName;
   } else {
     console.log("User is logged out");
     $state.go('unionVillage.home');
   };
+
   
-  // THIS DOESN'T WORK, NEED TO FIX FOR FIREBASE 3.X.X
   //This is called when a user clicks the 'Sign Up' button
-  $scope.register = function(username, password){
-    users.createUser({
-      email    : username,
-      password : password
-    }, function(error) {
-      if (error) {
-        console.log("Error creating user:", error);
-      } else {
-        users.authWithPassword({
-          email: username,
-          password: password
-        }, function(error, authData) {
-          if (error) {
-            console.log("Login Failed!", error);
-          } else {
-            console.log("Authenticated successfully with payload:", authData);
-          }
+  $scope.register = function(email, password, displayName, photoURL){
+
+    firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log(error);
+
+    });
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        user.updateProfile({
+          displayName: $scope.firstName + ' ' + $scope.lastName
+        }).then(function() {
+          // Update successful.
+          //document.getElementById('displayName').textContent = user.displayName;
+          console.log(user.displayName);
+          //document.getElementById('displayName').textContent = user.displayName;
+          //document.getElementById('displayName').textContent = user.displayName;
+        }, function(error) {
+          // An error happened.
+          console.log(error);
         });
-        $scope.username = "";
-        $scope.password = "";
-        $state.go('unionVillage.dashboard');
+      } else {
+        // No user is signed in.
       }
     });
+
   };
   
   $scope.login = function(email, password){
+    var user = firebase.auth().currentUser;
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
       // Handle Errors here.
       var errorCode = error.code;
@@ -86,44 +94,11 @@ unionVillage.controller("LoginCtrl", function($scope, $state){
       if (user) {
         // User is signed in.
         $state.go('unionVillage.dashboard');
+        document.getElementById('displayName').textContent = user.displayName;
       };
     });
     
-    if (user != null) {
-      user.providerData.forEach(function (profile) {
-        console.log("Sign-in provider: "+profile.providerId);
-        console.log("  Provider-specific UID: "+profile.uid);
-        console.log("  Name: "+profile.displayName);
-        console.log("  Email: "+profile.email);
-        console.log("  Photo URL: "+profile.photoURL);
-      });
-    };
   };
-  
-  /* THIS DOESN'T WORK, NEED TO FIX FOR FIREBASE 3.X.X *
-  ref.onAuth(function(authData) {
-    if (authData && isNewUser) {
-      // save the user's profile into the database so we can list users,
-      // use them in Security and Firebase Rules, and show profiles
-      ref.child("users").child(authData.uid).set({
-        provider: authData.provider,
-        email: getName(authData)
-      });
-    }
-  });*
-  
-  // THIS DOESN'T WORK, NEED TO FIX FOR FIREBASE 3.X.X
-  // find a suitable name based on the meta info given by each provider
-  function getName(authData) {
-    switch(authData.provider) {
-      case 'password':
-        return authData.password.email.replace(/@.*, ''); //add in "/" after "*" when uncommented
-      case 'twitter':
-        return authData.twitter.displayName;
-      case 'facebook':
-        return authData.facebook.displayName;
-    }
-  }
   
   /*Logout Functionality */
   $scope.logout = function() {
@@ -179,7 +154,7 @@ unionVillage.controller("restaurantsCtrl", function($scope, $firebaseArray, $tim
     var nBytes = 0;
     
     /* Add posts */
-    $scope.addItem = function writeUserData(userId, name, email) {
+    $scope.addItem = function () {
       var timestamp = new Date().valueOf()
       
       firebase.database().ref('restaurants').push({
@@ -193,19 +168,6 @@ unionVillage.controller("restaurantsCtrl", function($scope, $firebaseArray, $tim
       $scope.postDescription = "";
 
     };
-
-    // Create a root reference
-    var storageRef = firebase.storage().ref();
-
-    // Create a reference to 'mountains.jpg'
-    var mountainsRef = storageRef.child('mountains.jpg');
-
-    // Create a reference to 'images/mountains.jpg'
-    var mountainImagesRef = storageRef.child('images/mountains.jpg');
-
-    // While the file names are the same, the references point to different files
-    mountainsRef.name === mountainImagesRef.name            // true
-    mountainsRef.fullPath === mountainImagesRef.fullPath    // false
     
 });
 
@@ -213,7 +175,7 @@ unionVillage.controller("restaurantsCtrl", function($scope, $firebaseArray, $tim
 unionVillage.controller("gamblingCtrl", function($scope, $firebaseArray, $timeout) {
 
     /* Add posts */
-    $scope.addItem = function writeUserData(userId, name, email) {
+    $scope.addItem = function () {
       var timestamp = new Date().valueOf()
       
       firebase.database().ref('gambling').push({
@@ -234,7 +196,7 @@ unionVillage.controller("gamblingCtrl", function($scope, $firebaseArray, $timeou
 unionVillage.controller("sightsCtrl", function($scope, $firebaseArray, $timeout) {
 
     /* Add posts */
-    $scope.addItem = function writeUserData(userId, name, email) {
+    $scope.addItem = function () {
       var timestamp = new Date().valueOf()
       
       firebase.database().ref('sights').push({
@@ -252,8 +214,10 @@ unionVillage.controller("sightsCtrl", function($scope, $firebaseArray, $timeout)
 });
 
 
-unionVillage.controller("imgCtrl", function($scope, $firebaseArray, $timeout) {
-
+unionVillage.controller("testCtrl", function($scope) {
     
+    /* Add posts */
+    $scope.addItem = function () {};
+
     
 });

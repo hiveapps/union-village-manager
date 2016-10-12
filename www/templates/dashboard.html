@@ -36,27 +36,34 @@
 		<div class="col-xs-12 col-md-4" style="height: 90%; border-radius: 10px; text-align: center;" ng-controller="LoginCtrl">
 			<h1>Register User</h1>
 			<div style="width: 90%; height: 85%; border: 1px solid black; margin: 0px auto; overflow-y: auto; border-radius: 10px;">
+				
+				<div style="width: 75%; height: 30%; border: 1px solid black;"><p id="displayName"></p></div>
+				
 				<!-- Username and Password input fields -->
 				<div class="form-group" style="width: 80%; margin: 0px auto 10px;">
 					<label for="email">Email:</label>
-					<input  type="text" class="form-control" id="email" placeholder="Email" ng-model="username" />
+					<input  type="text" class="form-control" id="email" placeholder="Email" ng-model="email" />
 				</div>
 				<div class="form-group" style="width: 80%; margin: 0px auto 10px;">
 					<label for="password">Password:</label>
 					<input type="password" class="form-control" id="password" placeholder="Password" ng-model="password" />
 				</div>
-				
-				<!-- Login Button
-				<div style="text-align: center;">
-					<button type="button" class="btn btn-primary" style="margin: 0px auto;" ng-click="login(username, password)"> 
-						Login 
-					</button>
-				</div>-->
+				<div class="form-group" style="width: 80%; margin: 0px auto 10px;">
+					<label for="password">First Name:</label>
+					<input type="text" class="form-control" id="firstName" ng-model="firstName"  placeholder="First Name" required />
+				</div>
+				<div class="form-group" style="width: 80%; margin: 0px auto 10px;">
+					<label for="password">Last Name:</label>
+					<input type="text" class="form-control" id="lastName" ng-model="lastName"  placeholder="Last Name" required />
+				</div>
 				
 				<!-- Sign Up Button -->
-				<button type="button" class="btn btn-danger" ng-click="register(username, password)"> 
+				<button type="button" class="btn btn-danger" ng-click="register(email, password, firstName, lastName)"> 
 					Sign Up 
 				</button>
+
+				<!--<button ng-click="update()" class="btn btn-primary" type="button">Post</button>-->
+
 			</div>
 		</div>
 		<!-- End of Register User -->
@@ -116,19 +123,23 @@
 			</div>
 			
 		</div>
-		<!-- End of Neighbors Posting -->
-		
-		<div class="col-xs-12 col-md-4" style="height: 90%; border-radius: 10px; text-align: center;" ng-controller="imgCtrl">
-			<h1>Sights</h1>
+
+
+		<div class="col-xs-12 col-md-4" style="height: 90%; border-radius: 10px; text-align: center;" ng-controller="testCtrl">
+			<h1>Test</h1>
 			<div style="width: 90%; height: 85%; border: 1px solid black; margin: 0px auto; overflow-y: auto; border-radius: 10px;">
 				
+				<!--<input type="text" class="form-control" ng-model="displayName" placeholder="Add header (25 Character Max)" required maxlength="25" style="width: 90%; margin: 3% auto;" />
+				<textarea type="text" class="form-control" ng-model="postDescription" placeholder="Add post (175 Character Max)" required maxlength="175" style="height: 25%; width: 90%; margin: 3% auto; resize: none;"></textarea>
 				<input type="file" ng-model="postImage" id="postImage">
 				
-				<button ng-click="addItem()" ng-disabled="!postDescription" class="btn btn-primary" type="button">Post</button>
+				<button ng-click="addItem()" class="btn btn-primary" type="button">Post</button>-->
 
 			</div>
 			
 		</div>
+		<!-- End of Neighbors Posting -->
+		
 		
 	</div>
 </div>
